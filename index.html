@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Ajax</title>
+    <script
+      src="https://code.jquery.com/jquery-3.3.1.js"
+      integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
+      crossorigin="anonymous"></script></head>
+
+<body>
+
+    <div>
+        <p>Bir Ajax metodu ile GET ve POST isteğinde bulunur.</p>
+        <input type="text" id="birim" name="" value="">
+        <button id="btnAjaxGet">Ajax Get Top 10 Post</button>
+        <button id="btnAjaxPost">Ajax Post Article</button>
+        <br>
+        <input type="text" id="sonuc" name="" value="">
+
+    </div>
+
+    <div>
+        <ul id="list">
+
+        </ul>
+    </div>
+
+    <script>
+
+        var root = "https://api.exchangeratesapi.io/latest?base=";
+        var ul = $("#list");
+        $("#btnAjaxGet").click(function(){
+          var birim =$('#birim').val();
+            $.ajax({
+                method : "GET",
+                url : root + birim
+            }).done(function(data){
+              $("#sonuc").val(data["rates"].TRY);
+
+            }).fail(function(){
+                alert("birim girin lütfen")
+            })
+        });
+        $("#btnAjaxPost").click(function(){
+            $.ajax({
+                method : "POST",
+                url : root + "/posts",
+                data : {
+                    "title":$("#txtTitle").val(),
+                    "body":$("#txtText").val(),
+                }
+            }).done(function(data){
+                var li = $("<li></li>");
+                li.text(data.title + "-" + data.body);
+                ul.append(li);
+            }).fail(function(){
+                var li = $("<li></li>");
+                li.text("Hata oluştu..");
+                $("#list").append(li);
+            })
+        });
+    </script>
+
+</body>
+
+</html>
