@@ -31,38 +31,35 @@
 
     <script>
 
-        var root = "https://api.exchangeratesapi.io/latest?base=";
-        var ul = $("#list");
-        $("#btnAjaxGet").click(function(){
-          var birim =$('#birim').val();
-            $.ajax({
-                method : "GET",
-                url : root + birim
-            }).done(function(data){
-              $("#sonuc").val(data["rates"].TRY);
 
-            }).fail(function(){
-                alert("birim girin lütfen")
-            })
-        });
-        $("#btnAjaxPost").click(function(){
-            $.ajax({
-                method : "POST",
-                url : root + "/posts",
-                data : {
-                    "title":$("#txtTitle").val(),
-                    "body":$("#txtText").val(),
-                }
-            }).done(function(data){
-                var li = $("<li></li>");
-                li.text(data.title + "-" + data.body);
-                ul.append(li);
-            }).fail(function(){
-                var li = $("<li></li>");
-                li.text("Hata oluştu..");
-                $("#list").append(li);
-            })
-        });
+
+    async function asd(birim){
+      var root = "https://api.exchangeratesapi.io/latest?base=" + birim;
+      let data =  await fetch(root);
+      let json = await data.json();
+      return{
+        rate:json.rates,
+        birim:json.base
+      }
+    }
+
+    $("#btnAjaxGet").click(alertMe());
+    function alertMe() {
+
+
+  setInterval(function(){
+    var birim =$('#birim').val();
+    asd(birim).
+    then(result=>{
+      $('#sonuc').val(result.rate.TRY);
+    });
+  },200);
+}
+
+
+
+
+
     </script>
 
 </body>
